@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomerDataFetcher  implements DataFetcher<Customer>{
+public class CustomerDataFetcher implements DataFetcher<Customer> {
 
     @Autowired
     private CustomerRepository customerRepository;

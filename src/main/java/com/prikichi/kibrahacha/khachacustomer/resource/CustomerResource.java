@@ -1,11 +1,13 @@
 package com.prikichi.kibrahacha.khachacustomer.resource;
 
-import com.prikichi.kibrahacha.khachacustomer.service.GraphQLService;
-import graphql.ExecutionResult;
+import com.prikichi.kibrahacha.khachacustomer.service.datafetcher.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
@@ -14,14 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/customers")
 public class CustomerResource {
 
+    private final CustomerService customerService;
+
     @Autowired
-    private GraphQLService graphQLService;
-
-
-    @PostMapping
-    public ResponseEntity<Object> getAllCustomers(@RequestBody final String query){
-        final ExecutionResult result = graphQLService.getGraphQL().execute(query);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public CustomerResource(final CustomerService customerService) {
+        this.customerService = customerService;
     }
 
+    @PostMapping
+    public ResponseEntity<Object> getAllCustomers(@RequestBody final String query) {
+        return new ResponseEntity<>(customerService.get(query), HttpStatus.OK);
+    }
 }

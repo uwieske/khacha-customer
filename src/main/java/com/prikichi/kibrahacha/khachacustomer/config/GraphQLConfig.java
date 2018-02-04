@@ -1,4 +1,4 @@
-package com.prikichi.kibrahacha.khachacustomer.service;
+package com.prikichi.kibrahacha.khachacustomer.config;
 
 import com.prikichi.kibrahacha.khachacustomer.service.datafetcher.AllCustomersDataFetcher;
 import com.prikichi.kibrahacha.khachacustomer.service.datafetcher.CustomerDataFetcher;
@@ -10,21 +10,18 @@ import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 
-@Service
-public class GraphQLService {
+@Configuration
+public class GraphQLConfig {
 
     @Value("classpath:customers.graphql")
     private Resource resource;
-
-    private GraphQL graphQL;
-
 
     @Autowired
     private AllCustomersDataFetcher allCustomersDataFetcher;
@@ -32,19 +29,16 @@ public class GraphQLService {
     @Autowired
     private CustomerDataFetcher customerDataFetcher;
 
-
-    @PostConstruct
-    public void loadSchema() throws IOException {
+    @Bean
+    public GraphQL customerGraphQL() throws IOException {
 
         File schemaFile = resource.getFile();
         TypeDefinitionRegistry typeDefinitionRegistry = new SchemaParser().parse(schemaFile);
         RuntimeWiring wiring = buildRuntimeWiring();
         GraphQLSchema schema = new SchemaGenerator().makeExecutableSchema(typeDefinitionRegistry, wiring);
-        graphQL = GraphQL.newGraphQL(schema).build();
-    }
+        GraphQL graphQL = GraphQL.newGraphQL(schema).build();
 
-    public GraphQL getGraphQL() {
-        return this.graphQL;
+        return graphQL;
     }
 
     private RuntimeWiring buildRuntimeWiring() {
@@ -54,4 +48,5 @@ public class GraphQLService {
                         .dataFetcher("customer", customerDataFetcher))
                 .build();
     }
+
 }
