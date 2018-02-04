@@ -1,6 +1,5 @@
 package com.prikichi.kibrahacha.khachacustomer.service;
 
-import com.prikichi.kibrahacha.khachacustomer.repository.CustomerRepository;
 import com.prikichi.kibrahacha.khachacustomer.service.datafetcher.AllCustomersDataFetcher;
 import com.prikichi.kibrahacha.khachacustomer.service.datafetcher.CustomerDataFetcher;
 import graphql.GraphQL;
@@ -26,8 +25,6 @@ public class GraphQLService {
 
     private GraphQL graphQL;
 
-    @Autowired
-    private CustomerRepository customerRepository;
 
     @Autowired
     private AllCustomersDataFetcher allCustomersDataFetcher;
